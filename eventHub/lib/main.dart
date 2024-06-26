@@ -17,17 +17,17 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(
-    DevicePreview(
-      enabled: true,
-      tools: const [
-        ...DevicePreview.defaultTools,
-        //const CustomPlugin(),
-      ],
-      builder: (context) => const App(),
-    ),
-  );
-  //runApp(const App());
+  // runApp(
+  //   DevicePreview(
+  //     enabled: true,
+  //     tools: const [
+  //       ...DevicePreview.defaultTools,
+  //       //const CustomPlugin(),
+  //     ],
+  //     builder: (context) => const App(),
+  //   ),
+  // );
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
@@ -44,8 +44,8 @@ class App extends StatelessWidget {
       //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
       //   useMaterial3: true,
       // ),
-      home: const TabsScreen(),
-      //home: const LoginScreen(),
+      //home: const TabsScreen(),
+      home: const LoginScreen(),
       
       
     );

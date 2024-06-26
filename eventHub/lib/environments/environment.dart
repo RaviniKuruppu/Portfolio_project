@@ -1,3 +1,3 @@
 class Environment {
-  final String baseUrl = 'https://localhost:5000/api/auth/';
+  final String baseUrl = 'http://localhost:5000/api/auth';
 }
