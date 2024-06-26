@@ -38,12 +38,12 @@ class App extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       title: 'EventHub',
-      //theme: theme,
-      theme: ThemeData(
+      theme: theme,
+      // theme: ThemeData(
         
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-      ),
+      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+      //   useMaterial3: true,
+      // ),
       home: const TabsScreen(),
       //home: const LoginScreen(),
       

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/login_model.dart';
-//import '../services/auth_service.dart';
+// import '../services/auth_service.dart';
 import '../services/authentication_service.dart';
 import 'signUp_screen.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +15,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordVisible = false; 
 
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
@@ -81,19 +82,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               Expanded(
-                                child: SingleChildScrollView(
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      minHeight: 400,
+                                child: Center(
+                                  child: SingleChildScrollView(
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        minHeight: 400,
+                                      ),
+                                      height: MediaQuery.of(context).size.height *
+                                      1,
+                                          //0.75,
+                                      //width: 325,
+                                      width: MediaQuery.of(context).size.width*0.5,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        //borderRadius: BorderRadius.circular(20),
+                                      ),
+                                       child: Center(
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 325,
+                                        ),
+                                        child: _buildLoginForm(),
+                                      ),
                                     ),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.75,
-                                    width: 325,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: _buildLoginForm(),
                                   ),
                                 ),
                               ),
@@ -120,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: _buildLoginForm(),
-                            )
+                            ),
                           ],
                         );
                       }
@@ -153,9 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
           "Please Login to your Account",
           style: TextStyle(fontSize: 15, color: Colors.grey),
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         SizedBox(
           width: 250,
           child: TextFormField(
@@ -168,18 +178,28 @@ class _LoginScreenState extends State<LoginScreen> {
             validator: _validateUsername,
           ),
         ),
-        const SizedBox(
-          height: 15,
-        ),
+        const SizedBox(height: 15),
         SizedBox(
           width: 250,
           child: TextFormField(
             controller: _passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(
+            obscureText: !_isPasswordVisible,
+            decoration: InputDecoration(
               labelText: 'Password',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.key),
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.key),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              ),
             ),
             validator: _validatePassword,
           ),
@@ -192,18 +212,18 @@ class _LoginScreenState extends State<LoginScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignUpScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignUpScreen(),
+                    ),
+                  );
                 },
                 child: const Text(
                   'Sign Up',
                   style: TextStyle(color: Colors.black, fontSize: 15),
                 ),
               ),
-              const SizedBox(
-                width: 15,
-              ),
+              const SizedBox(width: 15),
               TextButton(
                 onPressed: () {
                   _formKey.currentState?.reset();
@@ -216,9 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ),
-        const SizedBox(
-          height: 15,
-        ),
+        const SizedBox(height: 15),
         GestureDetector(
           onTap: () {
             if (_formKey.currentState!.validate()) {
@@ -249,9 +267,10 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 'Login',
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

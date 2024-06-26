@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:meals/screens/tabs.dart';
-//import 'package:meals/widgets/main_drawer.dart';
+
+//import '../widgets/event_drawer.dart';
+//import 'tabs.dart';
 
 enum Filter {
   academic,
@@ -41,7 +42,7 @@ class _FilterScreenState extends State<FilterScreen> {
       ),
       // drawer: MainDrawer(onSelectScreen: (identifier) {
       //   Navigator.of(context).pop();
-      //   if (identifier == 'meals') {
+      //   if (identifier == 'events') {
       //     Navigator.of(context).push(
       //       MaterialPageRoute(
       //         builder: (ctx) => const TabsScreen(),

@@ -17,6 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
@@ -95,7 +96,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: _buildLoginForm(),
+                                    child: Center(
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 325,
+                                        ),
+                                        child: _buildLoginForm(),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -217,18 +225,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
             height: 15,
           ),
           SizedBox(
-            width: 250,
-            child: TextFormField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.key),
+          width: 250,
+          child: TextFormField(
+            controller: _passwordController,
+            obscureText: !_isPasswordVisible,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.key),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
               ),
-              validator: _validatePassword,
             ),
+            validator: _validatePassword,
           ),
+        ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 40, 20),
             child: Row(
