@@ -31,6 +31,9 @@ class AuthService {
           navigatorKey.currentContext!,
           MaterialPageRoute(builder: (context) => const TabsScreen ()),
         );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseData['message'])),
+        );
         }
       } else {
         // Handle error
@@ -58,16 +61,18 @@ class AuthService {
           'password': credentials.password,
           'name': credentials.name,
           'email': credentials.email,
+          'role': "user"
         }),
       );
 
       if (response.statusCode == 201) {
-        // Handle successful signup
+        
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+            // Handle successful signup
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Signup successful!')),
         );
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const LoginScreen()));
       } else {
         // Handle error
         final responseData = json.decode(response.body);

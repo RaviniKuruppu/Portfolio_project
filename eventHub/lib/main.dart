@@ -17,17 +17,17 @@ final theme = ThemeData(
 );
 
 void main() {
-  // runApp(
-  //   DevicePreview(
-  //     enabled: true,
-  //     tools: const [
-  //       ...DevicePreview.defaultTools,
-  //       //const CustomPlugin(),
-  //     ],
-  //     builder: (context) => const App(),
-  //   ),
-  // );
-  runApp(const App());
+  runApp(
+    DevicePreview(
+      enabled: true,
+      tools: const [
+        ...DevicePreview.defaultTools,
+        //const CustomPlugin(),
+      ],
+      builder: (context) => const App(),
+    ),
+  );
+  //runApp(const App());
 }
 
 class App extends StatelessWidget {
