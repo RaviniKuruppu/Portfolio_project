@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import '../main.dart';
 import '../models/login_model.dart';
@@ -7,6 +8,7 @@ import '../environments/environment.dart';
 import '../models/signup.dart';
 import '../screens/login_screen.dart';
 import '../screens/tabs.dart';
+import '../widgets/user_provider.dart';
 
 class AuthService {
   final Environment environment = Environment();
@@ -26,6 +28,11 @@ class AuthService {
       if (response.statusCode == 200) {
         // Handle successful login
         final responseData = json.decode(response.body);
+        final int userId = responseData['userID'];
+        final String role = responseData['role'];
+        
+        // Save userId and role using UserProvider
+        Provider.of<UserProvider>(context, listen: false).setUserIdAndRole(userId, role);
         if (responseData != Null) {
           Navigator.pushReplacement(
           navigatorKey.currentContext!,
