@@ -1,17 +1,7 @@
-enum Complexity {
-  simple,
-  challenging,
-  hard,
-}
+
 enum OnsiteOrOnline {
   onsite,
   online,
-}
-
-enum Affordability {
-  affordable,
-  pricey,
-  luxurious,
 }
 
 class Event {

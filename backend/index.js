@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./src/database/db');
 const authRoutes = require('./src/routes/authRoutes');
+const categoryRoutes = require('./src/routes/categoryRoutes');
 const cors = require('cors');
 
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 
 
 app.use('/api/auth', authRoutes);
+app.use('/api', categoryRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
