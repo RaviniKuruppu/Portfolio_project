@@ -3,11 +3,14 @@ import 'package:intl/intl.dart';
 import 'dart:io';
 import '../models/event.dart';
 import '../models/category.dart';
-import '../data/dummy_data.dart';
-// import 'package:image_picker/image_picker.dart';
+import '../services/category_service.dart';
 
 class UpdateEventScreen extends StatefulWidget {
-  const UpdateEventScreen({super.key, required this.event, required this.onUpdateEvent});
+  const UpdateEventScreen({
+    super.key,
+    required this.event,
+    required this.onUpdateEvent,
+  });
 
   final Event event;
   final void Function(Event event) onUpdateEvent;
@@ -29,6 +32,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   late OnsiteOrOnline _selectedOnsiteOrOnline;
   late String _selectedEventType;
   File? _selectedImage;
+  late Future<List<Category>> _categoriesFuture;
 
   @override
   void initState() {
@@ -48,6 +52,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
     _selectedEventType = widget.event.eventType;
 
     _imageUrlController.addListener(_updateImage);
+    _categoriesFuture = CategoryService().fetchCategories();
   }
 
   @override
@@ -210,19 +215,34 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                     if (_imageUrlController.text.isNotEmpty)
                       Image.network(_imageUrlController.text),
                     const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: _selectedCategory,
-                      items: availableCategories.map((Category category) {
-                        return DropdownMenuItem<String>(
-                          value: category.id,
-                          child: Text(category.title),
-                        );
-                      }).toList(),
-                      decoration: const InputDecoration(labelText: 'Category'),
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedCategory = newValue!;
-                        });
+                    FutureBuilder<List<Category>>(
+                      future: _categoriesFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text('Error loading categories');
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Text('No categories available');
+                        } else {
+                          final categories = snapshot.data!;
+                          return DropdownButtonFormField<String>(
+                            value: _selectedCategory,
+                            items: categories.map((Category category) {
+                              return DropdownMenuItem<String>(
+                                value: category.id,
+                                child: Text(category.title),
+                              );
+                            }).toList(),
+                            dropdownColor: Colors.white,
+                            decoration: const InputDecoration(labelText: 'Category'),
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedCategory = newValue!;
+                              });
+                            },
+                          );
+                        }
                       },
                     ),
                     const SizedBox(height: 16),
@@ -234,6 +254,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                           child: Text(value.toString().split('.').last),
                         );
                       }).toList(),
+                      dropdownColor: Colors.white,
                       decoration: const InputDecoration(labelText: 'Onsite or Online'),
                       onChanged: (newValue) {
                         setState(() {
@@ -244,13 +265,18 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       value: _selectedEventType,
-                      items: ['extracurricular', 'academic', 'social', 'career Development']
-                          .map((String value) {
+                      items: [
+                        'extracurricular',
+                        'academic',
+                        'social',
+                        'career Development'
+                      ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
+                      dropdownColor: Colors.white,
                       decoration: const InputDecoration(labelText: 'Event Type'),
                       onChanged: (newValue) {
                         setState(() {

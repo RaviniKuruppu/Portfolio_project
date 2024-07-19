@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../data/dummy_data.dart';
-import '../models/category.dart';
-import '../models/event.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../models/category.dart';
+import '../models/event.dart';
+import '../services/category_service.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key, required this.onAddEvent});
@@ -22,12 +22,37 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
-  String _selectedCategory = availableCategories.first.id;
+  String? _selectedCategory;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   OnsiteOrOnline _selectedOnsiteOrOnline = OnsiteOrOnline.onsite;
   String _selectedEventType = 'extracurricular';
   File? _selectedImage;
+  late Future<List<Category>> _categoriesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrlController.addListener(_updateImage);
+    _categoriesFuture = CategoryService().fetchCategories();
+  }
+
+  @override
+  void dispose() {
+    _imageUrlController.removeListener(_updateImage);
+    _titleController.dispose();
+    _subjectController.dispose();
+    _locationController.dispose();
+    _descriptionController.dispose();
+    _imageUrlController.dispose();
+    super.dispose();
+  }
+
+  void _updateImage() {
+    setState(() {
+      // Update state to show the new image preview
+    });
+  }
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -45,7 +70,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         location: _locationController.text,
         description: _descriptionController.text,
         imageUrl: _imageUrlController.text,
-        categories: _selectedCategory,
+        categories: _selectedCategory!,
         onsiteOrOnline: _selectedOnsiteOrOnline,
         eventType: _selectedEventType,
       );
@@ -63,8 +88,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor:
-                          Colors.white,
+        backgroundColor: Colors.white,
         title: const Text('Error'),
         content: Text(message),
         actions: [
@@ -106,8 +130,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
@@ -148,7 +171,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     const Center(
                       child: Text(
                         "Please fill the form ",
-                        style: TextStyle(fontSize: 25, color: Colors.grey),
+                        style: TextStyle(fontSize: 25, color: Colors.black),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -187,8 +210,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _descriptionController,
-                      decoration:
-                          const InputDecoration(labelText: 'Description'),
+                      decoration: const InputDecoration(labelText: 'Description'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a description';
@@ -211,19 +233,34 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     if (_imageUrlController.text.isNotEmpty)
                       Image.network(_imageUrlController.text),
                     const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: _selectedCategory,
-                      items: availableCategories.map((Category category) {
-                        return DropdownMenuItem<String>(
-                          value: category.id,
-                          child: Text(category.title),
-                        );
-                      }).toList(),
-                      decoration: const InputDecoration(labelText: 'Category'),
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedCategory = newValue!;
-                        });
+                    FutureBuilder<List<Category>>(
+                      future: _categoriesFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text('Error loading categories');
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Text('No categories available');
+                        } else {
+                          final categories = snapshot.data!;
+                          return DropdownButtonFormField<String>(
+                            value: _selectedCategory,
+                            items: categories.map((Category category) {
+                              return DropdownMenuItem<String>(
+                                value: category.id,
+                                child: Text(category.title),
+                              );
+                            }).toList(),
+                            dropdownColor: Colors.white,
+                            decoration: const InputDecoration(labelText: 'Category'),
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedCategory = newValue!;
+                              });
+                            },
+                          );
+                        }
                       },
                     ),
                     const SizedBox(height: 16),
@@ -235,8 +272,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           child: Text(value.toString().split('.').last),
                         );
                       }).toList(),
-                      decoration:
-                          const InputDecoration(labelText: 'Onsite or Online'),
+                      dropdownColor: Colors.white,
+                      decoration: const InputDecoration(labelText: 'Onsite or Online'),
                       onChanged: (newValue) {
                         setState(() {
                           _selectedOnsiteOrOnline = newValue!;
@@ -257,8 +294,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           child: Text(value),
                         );
                       }).toList(),
-                      decoration:
-                          const InputDecoration(labelText: 'Event Type'),
+                      dropdownColor: Colors.white,
+                      decoration: const InputDecoration(labelText: 'Event Type'),
                       onChanged: (newValue) {
                         setState(() {
                           _selectedEventType = newValue!;
@@ -275,14 +312,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               onPressed: _selectDate,
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: const Color.fromARGB(
-                                    255, 5, 131, 235), // Button text color
+                                backgroundColor: const Color.fromARGB(255, 5, 131, 235),
                               ),
                               child: Text(
                                 _selectedDate == null
                                     ? 'Select Date'
-                                    : DateFormat('yyyy-MM-dd')
-                                        .format(_selectedDate!),
+                                    : DateFormat('yyyy-MM-dd').format(_selectedDate!),
                               ),
                             ),
                           ),
@@ -293,8 +328,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             onPressed: _selectTime,
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor: const Color.fromARGB(
-                                  255, 5, 131, 235), // Button text color
+                              backgroundColor: const Color.fromARGB(255, 5, 131, 235),
                             ),
                             child: Text(
                               _selectedTime == null
@@ -310,8 +344,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       onPressed: _submitForm,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: const Color.fromARGB(
-                            255, 5, 131, 235), // Button text color
+                        backgroundColor: const Color.fromARGB(255, 5, 131, 235),
                       ),
                       child: const Text('Add Event'),
                     ),
@@ -323,14 +356,5 @@ class _AddEventScreenState extends State<AddEventScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _subjectController.dispose();
-    _locationController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
   }
 }
