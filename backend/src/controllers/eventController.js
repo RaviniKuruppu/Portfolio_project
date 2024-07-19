@@ -55,7 +55,7 @@ exports.deleteEvent = (req, res) => {
 // Get List of Events
 exports.getEvents = (req, res) => {
   const query = `
-    SELECT events.*, categories.title AS categoryTitle
+    SELECT events.*
     FROM events
     JOIN categories ON events.category_id = categories.id
   `;

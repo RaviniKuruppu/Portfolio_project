@@ -59,9 +59,9 @@ const availableCategories = [
 
 List<Event> dummyEvents = [
    Event(
-    id: 'm1',
+    id: 2,
     //categories: 'c1',
-    categories: '5',
+    category_id: '5',
      
     title: 'Workshop On Data Science',
     onsiteOrOnline: OnsiteOrOnline.online,
@@ -75,9 +75,9 @@ List<Event> dummyEvents = [
     eventType: "academic"
   ),
   Event(
-    id: 'm2',
+    id: 3,
     //categories: 'c2',
-    categories: '6',
+    category_id: '6',
     title: 'Seminar On Construction',
     onsiteOrOnline: OnsiteOrOnline.onsite,
     time: '8:30 AM',
@@ -90,9 +90,9 @@ List<Event> dummyEvents = [
     eventType: "extracurricular"
   ),
   Event(
-    id: 'm3',
+    id: 1,
     //categories: 'c2',
-    categories: '6',
+    category_id: '6',
 
     title: 'Workshop On Sustainable Energy sources',
     onsiteOrOnline: OnsiteOrOnline.online,

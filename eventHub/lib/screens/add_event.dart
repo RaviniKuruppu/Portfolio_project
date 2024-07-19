@@ -62,7 +62,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       }
 
       final newEvent = Event(
-        id: DateTime.now().toString(),
+        id: 8,
         title: _titleController.text,
         subject: _subjectController.text,
         date: DateFormat('yyyy-MM-dd').format(_selectedDate!),
@@ -70,7 +70,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         location: _locationController.text,
         description: _descriptionController.text,
         imageUrl: _imageUrlController.text,
-        categories: _selectedCategory!,
+        category_id: _selectedCategory!,
         onsiteOrOnline: _selectedOnsiteOrOnline,
         eventType: _selectedEventType,
       );

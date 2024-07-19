@@ -38,7 +38,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void _selectCategory(BuildContext context, Category category) {
     final filteredEvents = widget.availableEvents.where(
-      (meal) => meal.categories.contains(category.id),
+      (meal) => meal.category_id.contains(category.id),
     ).toList();
     Navigator.of(context).push(
       MaterialPageRoute(

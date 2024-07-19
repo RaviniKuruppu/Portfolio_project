@@ -7,7 +7,7 @@ enum OnsiteOrOnline {
 class Event {
   const Event({
     required this.id,
-    required this.categories,
+    required this.category_id,
     required this.title,
     required this.imageUrl,
     required this.subject,
@@ -19,8 +19,8 @@ class Event {
     required this.eventType,
   });
 
-  final String id;
-  final String categories;
+  final int id;
+  final String category_id;
   final String title;
   final String imageUrl;
   final String subject;
