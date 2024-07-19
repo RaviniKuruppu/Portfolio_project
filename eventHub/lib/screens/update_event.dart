@@ -42,7 +42,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
     _locationController = TextEditingController(text: widget.event.location);
     _descriptionController = TextEditingController(text: widget.event.description);
     _imageUrlController = TextEditingController(text: widget.event.imageUrl);
-    _selectedCategory = widget.event.category_id;
+    _selectedCategory = widget.event.categoryId;
     _selectedDate = DateFormat('yyyy-MM-dd').parse(widget.event.date);
     _selectedTime = TimeOfDay(
       hour: int.parse(widget.event.time.split(":")[0]),
@@ -83,7 +83,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
         location: _locationController.text,
         description: _descriptionController.text,
         imageUrl: _imageUrlController.text,
-        category_id: _selectedCategory,
+        categoryId: _selectedCategory,
         onsiteOrOnline: _selectedOnsiteOrOnline,
         eventType: _selectedEventType,
       );

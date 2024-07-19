@@ -70,7 +70,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         location: _locationController.text,
         description: _descriptionController.text,
         imageUrl: _imageUrlController.text,
-        category_id: _selectedCategory!,
+        categoryId: _selectedCategory!,
         onsiteOrOnline: _selectedOnsiteOrOnline,
         eventType: _selectedEventType,
       );

@@ -61,7 +61,7 @@ List<Event> dummyEvents = [
    Event(
     id: 2,
     //categories: 'c1',
-    category_id: '5',
+    categoryId: '5',
      
     title: 'Workshop On Data Science',
     onsiteOrOnline: OnsiteOrOnline.online,
@@ -77,7 +77,7 @@ List<Event> dummyEvents = [
   Event(
     id: 3,
     //categories: 'c2',
-    category_id: '6',
+    categoryId: '6',
     title: 'Seminar On Construction',
     onsiteOrOnline: OnsiteOrOnline.onsite,
     time: '8:30 AM',
@@ -92,7 +92,7 @@ List<Event> dummyEvents = [
   Event(
     id: 1,
     //categories: 'c2',
-    category_id: '6',
+    categoryId: '6',
 
     title: 'Workshop On Sustainable Energy sources',
     onsiteOrOnline: OnsiteOrOnline.online,
