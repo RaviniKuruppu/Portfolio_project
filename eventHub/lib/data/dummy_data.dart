@@ -60,7 +60,8 @@ const availableCategories = [
 List<Event> dummyEvents = [
    Event(
     id: 'm1',
-    categories: 'c1',
+    //categories: 'c1',
+    categories: '5',
      
     title: 'Workshop On Data Science',
     onsiteOrOnline: OnsiteOrOnline.online,
@@ -75,7 +76,8 @@ List<Event> dummyEvents = [
   ),
   Event(
     id: 'm2',
-    categories: 'c2',
+    //categories: 'c2',
+    categories: '6',
     title: 'Seminar On Construction',
     onsiteOrOnline: OnsiteOrOnline.onsite,
     time: '8:30 AM',
@@ -89,7 +91,8 @@ List<Event> dummyEvents = [
   ),
   Event(
     id: 'm3',
-    categories: 'c2',
+    //categories: 'c2',
+    categories: '6',
 
     title: 'Workshop On Sustainable Energy sources',
     onsiteOrOnline: OnsiteOrOnline.online,
