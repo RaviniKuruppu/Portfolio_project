@@ -17,4 +17,39 @@ class CategoryService {
       throw Exception('Failed to load categories');
     }
   }
+
+  Future<void> addCategory(Category category) async {
+    final url = '${environment.localUrl}/categories';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(category.toJson()),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to add category');
+    }
+  }
+
+  Future<void> updateCategory(Category category) async {
+    final url = '${environment.localUrl}/categories/${category.id}';
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(category.toJson()),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update category');
+    }
+  }
+
+  Future<void> deleteCategory(String id) async {
+    final url = '${environment.localUrl}/categories/$id';
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete category');
+    }
+  }
 }

@@ -19,6 +19,14 @@ class Category {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'color': color.toString().split('.').last,
+    };
+  }
+
   static Color _colorFromString(String colorString) {
     final colorMap = {
       'red': Colors.red,

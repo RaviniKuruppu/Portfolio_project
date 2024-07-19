@@ -140,6 +140,24 @@ class MainDrawer extends StatelessWidget {
                   onSelectScreen('deleteEvent');
                 },
               ),
+              if (isAdmin)
+              ListTile(
+                leading: Icon(
+                  Icons.category,
+                  size: 26,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                title: Text(
+                  'Add Category',
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 24,
+                      ),
+                ),
+                onTap: () {
+                  onSelectScreen('addCategory');
+                },
+              ),
             ListTile(
               leading: Icon(
                 Icons.logout,
