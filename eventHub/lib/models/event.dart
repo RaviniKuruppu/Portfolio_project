@@ -50,8 +50,7 @@ class Event {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'category_id': categoryId,
+      'categoryId': int.parse(categoryId),
       'title': title,
       'imageUrl': imageUrl,
       'subject': subject,

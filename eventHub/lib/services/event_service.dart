@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../environments/environment.dart';
 import '../models/event.dart';
 
 class EventService {
-  static const String _baseUrl = 'http://your-backend-url.com/api/events';
+  final Environment environment = Environment();
+  //static const String _baseUrl = 'http://your-backend-url.com/api/events';
 
   Future<List<Event>> fetchEvents() async {
-    final response = await http.get(Uri.parse(_baseUrl));
+    final url = '${environment.localUrl}/events';
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       return data.map((json) => Event.fromJson(json)).toList();
@@ -16,8 +19,9 @@ class EventService {
   }
 
   Future<void> addEvent(Event event) async {
+    final url = '${environment.localUrl}/events';
     final response = await http.post(
-      Uri.parse(_baseUrl),
+      Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(event.toJson()),
     );
@@ -28,8 +32,9 @@ class EventService {
   }
 
   Future<void> updateEvent(Event event) async {
+    final url = '${environment.localUrl}/events';
     final response = await http.put(
-      Uri.parse('$_baseUrl/${event.id}'),
+      Uri.parse('$url/${event.id}'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(event.toJson()),
     );
@@ -40,7 +45,8 @@ class EventService {
   }
 
   Future<void> deleteEvent(int id) async {
-    final response = await http.delete(Uri.parse('$_baseUrl/$id'));
+    final url = '${environment.localUrl}/events';
+    final response = await http.delete(Uri.parse('$url/$id'));
 
     if (response.statusCode != 200) {
       throw Exception('Failed to delete event');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/dummy_data.dart';
 import '../models/event.dart';
+import '../services/event_service.dart';
 import '../widgets/event_drawer.dart';
 import 'add_event.dart';
 import 'categories.dart';
@@ -11,7 +11,7 @@ const kInitialFilter = {
   Filter.academic: false,
   Filter.extracurricular: false,
   Filter.careerDevelopment: false,
-  Filter.social: false
+  Filter.social: false,
 };
 
 class TabsScreen extends StatefulWidget {
@@ -27,6 +27,14 @@ class _TabsScreenState extends State<TabsScreen> {
   Map<Filter, bool> _selectFilters = kInitialFilter;
   bool _isUpdateAllowed = false;
   bool _isDeleteAllowed = false;
+  late Future<List<Event>> _eventsFuture;
+  final EventService _eventService = EventService();
+
+  @override
+  void initState() {
+    super.initState();
+    _eventsFuture = _eventService.fetchEvents();
+  }
 
   void _showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -59,20 +67,40 @@ class _TabsScreenState extends State<TabsScreen> {
     });
   }
 
-  void _updateEvent(Event updatedEvent) {
-    setState(() {
-      final index =
-          dummyEvents.indexWhere((event) => event.id == updatedEvent.id);
-      if (index != -1) {
-        dummyEvents[index] = updatedEvent;
-      }
-    });
+  Future<void> _addEvent(Event event) async {
+    try {
+      await _eventService.addEvent(event);
+      setState(() {
+        _eventsFuture = _eventService.fetchEvents();
+      });
+      _showInfoMessage('Event added successfully.');
+    } catch (error) {
+      _showInfoMessage('Failed to add event.');
+    }
   }
 
-  void _deleteEvent(Event eventToDelete) {
-    setState(() {
-      dummyEvents.removeWhere((event) => event.id == eventToDelete.id);
-    });
+  Future<void> _updateEvent(Event updatedEvent) async {
+    try {
+      await _eventService.updateEvent(updatedEvent);
+      setState(() {
+        _eventsFuture = _eventService.fetchEvents();
+      });
+      _showInfoMessage('Event updated successfully.');
+    } catch (error) {
+      _showInfoMessage('Failed to update event.');
+    }
+  }
+
+  Future<void> _deleteEvent(Event eventToDelete) async {
+    try {
+      await _eventService.deleteEvent(eventToDelete.id);
+      setState(() {
+        _eventsFuture = _eventService.fetchEvents();
+      });
+      _showInfoMessage('Event deleted successfully.');
+    } catch (error) {
+      _showInfoMessage('Failed to delete event.');
+    }
   }
 
   void _setScreen(String identifier, bool isLargeScreen) async {
@@ -96,11 +124,7 @@ class _TabsScreenState extends State<TabsScreen> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (ctx) => AddEventScreen(
-            onAddEvent: (event) {
-              setState(() {
-                dummyEvents.add(event);
-              });
-            },
+            onAddEvent: _addEvent,
           ),
         ),
       );
@@ -128,68 +152,83 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableEvents = dummyEvents.where((event) {
-      if (_selectFilters[Filter.academic]! &&
-          !(event.eventType == 'academic')) {
-        return false;
-      }
-      if (_selectFilters[Filter.extracurricular]! &&
-          !(event.eventType == 'extracurricular')) {
-        return false;
-      }
-      if (_selectFilters[Filter.careerDevelopment]! &&
-          !(event.eventType == 'careerDevelopment')) {
-        return false;
-      }
-      if (_selectFilters[Filter.social]! && !(event.eventType == 'social')) {
-        return false;
-      }
-      return true;
-    }).toList();
-
-    Widget activePage = CategoriesScreen(
-      onTogglesFavorites: _toggleEventFavoriteStatus,
-      availableEvents: availableEvents,
-      onUpdateEvent: _updateEvent,
-      isUpdateAllowed: _isUpdateAllowed,
-      onDeleteEvent: _deleteEvent,
-      isDeleteAllowed: _isDeleteAllowed,
-    );
-    var activePageTitle = 'Categories';
-
-    if (_selectedPageIndex == 1) {
-      activePage = EventsScreen(
-        events: _favoriteEvent,
-        onToggleFavorite: _toggleEventFavoriteStatus,
-        onUpdateEvent: _updateEvent,
-        isUpdateAllowed: _isUpdateAllowed,
-        onDeleteEvent: _deleteEvent,
-        isDeleteAllowed: _isDeleteAllowed,
-      );
-      activePageTitle = 'Your Favorites';
-    }
-
     return LayoutBuilder(
       builder: (ctx, constraints) {
         final bool isLargeScreen = constraints.maxWidth > 600;
         return Scaffold(
           appBar: AppBar(
-            title: Text(activePageTitle),
+            title: const Text('Events'),
           ),
           drawer: isLargeScreen ? null : MainDrawer(
             onSelectScreen: (identifier) => _setScreen(identifier, isLargeScreen),
           ),
-          body: Row(
-            children: [
-              if (isLargeScreen)
-                SizedBox(
-                  width: constraints.maxWidth / 3,
-                  child: MainDrawer(
-                    onSelectScreen: (identifier) => _setScreen(identifier, isLargeScreen),
-                  ),
-                ),
-              Expanded(child: activePage),
-            ],
+          body: FutureBuilder<List<Event>>(
+            future: _eventsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Failed to load events'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No events available'));
+              } else {
+                final availableEvents = snapshot.data!.where((event) {
+                  if (_selectFilters[Filter.academic]! &&
+                      !(event.eventType == 'academic')) {
+                    return false;
+                  }
+                  if (_selectFilters[Filter.extracurricular]! &&
+                      !(event.eventType == 'extracurricular')) {
+                    return false;
+                  }
+                  if (_selectFilters[Filter.careerDevelopment]! &&
+                      !(event.eventType == 'careerDevelopment')) {
+                    return false;
+                  }
+                  if (_selectFilters[Filter.social]! &&
+                      !(event.eventType == 'social')) {
+                    return false;
+                  }
+                  return true;
+                }).toList();
+
+                Widget activePage = CategoriesScreen(
+                  onTogglesFavorites: _toggleEventFavoriteStatus,
+                  availableEvents: availableEvents,
+                  onUpdateEvent: _updateEvent,
+                  isUpdateAllowed: _isUpdateAllowed,
+                  onDeleteEvent: _deleteEvent,
+                  isDeleteAllowed: _isDeleteAllowed,
+                );
+                var activePageTitle = 'Categories';
+
+                if (_selectedPageIndex == 1) {
+                  activePage = EventsScreen(
+                    events: _favoriteEvent,
+                    onToggleFavorite: _toggleEventFavoriteStatus,
+                    onUpdateEvent: _updateEvent,
+                    isUpdateAllowed: _isUpdateAllowed,
+                    onDeleteEvent: _deleteEvent,
+                    isDeleteAllowed: _isDeleteAllowed,
+                  );
+                  activePageTitle = 'Your Favorites';
+                }
+
+                return Row(
+                  children: [
+                    if (isLargeScreen)
+                      SizedBox(
+                        width: constraints.maxWidth / 3,
+                        child: MainDrawer(
+                          onSelectScreen: (identifier) =>
+                              _setScreen(identifier, isLargeScreen),
+                        ),
+                      ),
+                    Expanded(child: activePage),
+                  ],
+                );
+              }
+            },
           ),
           bottomNavigationBar: BottomNavigationBar(
             onTap: _selectPage,
