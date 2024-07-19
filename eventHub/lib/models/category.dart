@@ -30,6 +30,7 @@ class Category {
       'pink': Colors.pink,
       'brown': Colors.brown,
       'grey': Colors.grey,
+      'lightBlue': Colors.lightBlue,
       // Add more colors as needed
     };
 
