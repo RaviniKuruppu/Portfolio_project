@@ -13,3 +13,12 @@ CREATE TABLE categories (
   color VARCHAR(255) DEFAULT 'orange'
 );
 
+INSERT INTO categories (title, color) VALUES ('CSE', 'pink');
+INSERT INTO categories (title, color) VALUES ('Civil', 'blue');
+INSERT INTO categories (title, color) VALUES ('ENTC', 'orange');
+INSERT INTO categories (title, color) VALUES ('Electrical', 'yellow');
+INSERT INTO categories (title, color) VALUES ('Material', 'purple');
+INSERT INTO categories (title, color) VALUES ('Chemical', 'green');
+INSERT INTO categories (title, color) VALUES ('Mechanical', 'red');
+INSERT INTO categories (title, color) VALUES ('Textile', 'brown');
+
