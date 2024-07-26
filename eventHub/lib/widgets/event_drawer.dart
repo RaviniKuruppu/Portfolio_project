@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/add_category.dart';
 import '../screens/login_screen.dart';
+import '../services/category_service.dart';
 import 'user_provider.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -157,6 +159,26 @@ class MainDrawer extends StatelessWidget {
                 onTap: () {
                   onSelectScreen('addCategory');
                 },
+                // onTap: () {
+                //   Navigator.of(context).push(
+                //     MaterialPageRoute(
+                //       builder: (context) => AddCategoryScreen(
+                //         onAddCategory: (category) async {
+                //           try {
+                //             await CategoryService().addCategory(category);
+                //             ScaffoldMessenger.of(context).showSnackBar(
+                //               const SnackBar(content: Text('Category added successfully')),
+                //             );
+                //           } catch (error) {
+                //             ScaffoldMessenger.of(context).showSnackBar(
+                //               const SnackBar(content: Text('Failed to add category')),
+                //             );
+                //           }
+                //         },
+                //       ),
+                //     ),
+                //   );
+                // },
               ),
             ListTile(
               leading: Icon(

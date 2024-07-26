@@ -3,7 +3,7 @@ import '../models/category.dart';
 import '../models/event.dart';
 import '../widgets/category_grid_item.dart';
 import 'events.dart';
-import '../services/category_service.dart';
+//import '../services/category_service.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({
@@ -14,6 +14,7 @@ class CategoriesScreen extends StatefulWidget {
     required this.isUpdateAllowed,
     required this.onDeleteEvent,
     required this.isDeleteAllowed,
+    required this.categoriesFuture,  // Add this parameter
   });
 
   final void Function(Event meal) onTogglesFavorites;
@@ -22,20 +23,13 @@ class CategoriesScreen extends StatefulWidget {
   final bool isUpdateAllowed;
   final void Function(Event event) onDeleteEvent;
   final bool isDeleteAllowed;
+  final Future<List<Category>> categoriesFuture;  // Add this parameter
 
   @override
   _CategoriesScreenState createState() => _CategoriesScreenState();
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  late Future<List<Category>> _categoriesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _categoriesFuture = CategoryService().fetchCategories();
-  }
-
   void _selectCategory(BuildContext context, Category category) {
     final filteredEvents = widget.availableEvents.where(
       (meal) => meal.categoryId.contains(category.id),
@@ -58,7 +52,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Category>>(
-      future: _categoriesFuture,
+      future: widget.categoriesFuture,  // Use the passed Future
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

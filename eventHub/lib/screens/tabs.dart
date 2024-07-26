@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/event.dart';
+import '../models/category.dart';
 import '../services/event_service.dart';
+import '../services/category_service.dart';
 import '../widgets/event_drawer.dart';
+import 'add_category.dart';
 import 'add_event.dart';
 import 'categories.dart';
 import 'events.dart';
@@ -28,12 +31,15 @@ class _TabsScreenState extends State<TabsScreen> {
   bool _isUpdateAllowed = false;
   bool _isDeleteAllowed = false;
   late Future<List<Event>> _eventsFuture;
+  late Future<List<Category>> _categoriesFuture;
   final EventService _eventService = EventService();
+  final CategoryService _categoryService = CategoryService();
 
   @override
   void initState() {
     super.initState();
     _eventsFuture = _eventService.fetchEvents();
+    _categoriesFuture = _categoryService.fetchCategories();
   }
 
   void _showInfoMessage(String message) {
@@ -79,6 +85,19 @@ class _TabsScreenState extends State<TabsScreen> {
     }
   }
 
+  Future<void> _addCategory(String title, String color) async {
+    try {
+      await _categoryService.addCategory(title, color);
+      setState(() {
+        _categoriesFuture = _categoryService.fetchCategories();
+      });
+      _showInfoMessage('Category added successfully.');
+    } catch (error) {
+      print('Failed to add category: $error');
+      _showInfoMessage('Failed to add category.');
+    }
+  }
+
   Future<void> _updateEvent(Event updatedEvent) async {
     try {
       await _eventService.updateEvent(updatedEvent);
@@ -105,7 +124,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   void _setScreen(String identifier, bool isLargeScreen) async {
     if (!isLargeScreen) {
-      Navigator.of(context).pop();  // Close the drawer for small screens
+      Navigator.of(context).pop(); // Close the drawer for small screens
     }
 
     if (identifier == 'filter') {
@@ -125,6 +144,14 @@ class _TabsScreenState extends State<TabsScreen> {
         MaterialPageRoute(
           builder: (ctx) => AddEventScreen(
             onAddEvent: _addEvent,
+          ),
+        ),
+      );
+    } else if (identifier == 'addCategory') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => AddCategoryScreen(
+            onAddCategory: _addCategory,
           ),
         ),
       );
@@ -159,9 +186,12 @@ class _TabsScreenState extends State<TabsScreen> {
           appBar: AppBar(
             title: const Text('Events'),
           ),
-          drawer: isLargeScreen ? null : MainDrawer(
-            onSelectScreen: (identifier) => _setScreen(identifier, isLargeScreen),
-          ),
+          drawer: isLargeScreen
+              ? null
+              : MainDrawer(
+                  onSelectScreen: (identifier) =>
+                      _setScreen(identifier, isLargeScreen),
+                ),
           body: FutureBuilder<List<Event>>(
             future: _eventsFuture,
             builder: (context, snapshot) {
@@ -199,6 +229,7 @@ class _TabsScreenState extends State<TabsScreen> {
                   isUpdateAllowed: _isUpdateAllowed,
                   onDeleteEvent: _deleteEvent,
                   isDeleteAllowed: _isDeleteAllowed,
+                  categoriesFuture: _categoriesFuture, // Pass the Future
                 );
                 var activePageTitle = 'Categories';
 
