@@ -7,6 +7,7 @@ import '../widgets/event_drawer.dart';
 import 'add_category.dart';
 import 'add_event.dart';
 import 'categories.dart';
+import 'delete_category.dart';
 import 'events.dart';
 import 'filters.dart';
 
@@ -93,7 +94,6 @@ class _TabsScreenState extends State<TabsScreen> {
       });
       _showInfoMessage('Category added successfully.');
     } catch (error) {
-      print('Failed to add category: $error');
       _showInfoMessage('Failed to add category.');
     }
   }
@@ -109,6 +109,19 @@ class _TabsScreenState extends State<TabsScreen> {
       _showInfoMessage('Failed to update event.');
     }
   }
+
+  Future<void> _deleteCategory(String id) async {
+    try {
+      await CategoryService().deleteCategory(id);
+      setState(() {
+        _categoriesFuture = CategoryService().fetchCategories();
+      });
+      _showInfoMessage('Category deleted successfully.');
+    } catch (error) {
+      _showInfoMessage('Failed to delete category.');
+    }
+  }
+
 
   Future<void> _deleteEvent(Event eventToDelete) async {
     try {
@@ -155,7 +168,16 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
         ),
       );
-    } else if (identifier == 'updateEvent') {
+    }else if (identifier == 'deleteCategory') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => DeleteCategoryScreen(
+            onDeleteCategory: _deleteCategory,
+          ),
+        ),
+      );
+    }
+     else if (identifier == 'updateEvent') {
       setState(() {
         _isUpdateAllowed = true;
         _isDeleteAllowed = false;

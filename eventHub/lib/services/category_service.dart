@@ -51,7 +51,7 @@ class CategoryService {
     final url = '${environment.localUrl}/categories/$id';
     final response = await http.delete(Uri.parse(url));
 
-    if (response.statusCode != 204) {
+    if (response.statusCode != 200) {
       throw Exception('Failed to delete category');
     }
   }
