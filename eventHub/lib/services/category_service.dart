@@ -34,12 +34,15 @@ class CategoryService {
     }
   }
 
-  Future<void> updateCategory(Category category) async {
-    final url = '${environment.localUrl}/categories/${category.id}';
+  Future<void> updateCategory(String id, String title, String color) async {
+    final url = '${environment.localUrl}/categories/$id';
     final response = await http.put(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode(category.toJson()),
+      body: json.encode({
+        'title': title,
+        'color': color,
+      }),
     );
 
     if (response.statusCode != 200) {

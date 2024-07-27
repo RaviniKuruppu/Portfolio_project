@@ -10,6 +10,7 @@ import 'categories.dart';
 import 'delete_category.dart';
 import 'events.dart';
 import 'filters.dart';
+import 'update_category.dart';
 
 const kInitialFilter = {
   Filter.academic: false,
@@ -109,6 +110,17 @@ class _TabsScreenState extends State<TabsScreen> {
       _showInfoMessage('Failed to update event.');
     }
   }
+  Future<void> _updateCategory(String id, String title,String color) async {
+    try {
+      await _categoryService.updateCategory(id, title, color);
+      setState(() {
+        _categoriesFuture=_categoryService.fetchCategories();
+      });
+      _showInfoMessage('Category updated successfully.');
+    } catch (error) {
+      _showInfoMessage('Failed to update category.');
+    }
+  }
 
   Future<void> _deleteCategory(String id) async {
     try {
@@ -168,7 +180,16 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
         ),
       );
-    }else if (identifier == 'deleteCategory') {
+    }else if (identifier == 'updateCategory') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => UpdateCategoryScreen(
+            onUpdateCategory: _updateCategory,
+          ),
+        ),
+      );
+    }
+    else if (identifier == 'deleteCategory') {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (ctx) => DeleteCategoryScreen(

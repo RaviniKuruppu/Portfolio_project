@@ -140,7 +140,7 @@ class MainDrawer extends StatelessWidget {
                   onSelectScreen('deleteEvent');
                 },
               ),
-              if (isAdmin)
+            if (isAdmin)
               ListTile(
                 leading: Icon(
                   Icons.category,
@@ -174,6 +174,24 @@ class MainDrawer extends StatelessWidget {
                 ),
                 onTap: () {
                   onSelectScreen('deleteCategory');
+                },
+              ),
+            if (isAdmin)
+              ListTile(
+                leading: Icon(
+                  Icons.update_outlined,
+                  size: 26,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                title: Text(
+                  'Update Category',
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 24,
+                      ),
+                ),
+                onTap: () {
+                  onSelectScreen('updateCategory');
                 },
               ),
             ListTile(
