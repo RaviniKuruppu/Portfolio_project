@@ -91,7 +91,9 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
         const SnackBar(content: Text('Event Updated Successfully')),
       );
       widget.onUpdateEvent(updatedEvent);
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
+      int count = 0;
+      Navigator.of(context).popUntil((_) => count++ >= 3);
     }
   }
 

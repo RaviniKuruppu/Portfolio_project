@@ -5,7 +5,6 @@ import '../models/event.dart';
 
 class EventService {
   final Environment environment = Environment();
-  //static const String _baseUrl = 'http://your-backend-url.com/api/events';
 
   Future<List<Event>> fetchEvents() async {
     final url = '${environment.localUrl}/events';

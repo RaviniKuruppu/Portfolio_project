@@ -263,8 +263,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
                   if (confirmDelete == true) {
                     widget.onDeleteEvent(widget.event);
-                    Navigator.of(context)
-                        .pop(); // Return to the previous screen
+                    Navigator.of(context).pop(); // Return to the previous screen
                   }
                 },
                 style: ElevatedButton.styleFrom(
