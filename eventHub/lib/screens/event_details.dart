@@ -263,7 +263,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
                   if (confirmDelete == true) {
                     widget.onDeleteEvent(widget.event);
-                    Navigator.of(context).pop(); // Return to the previous screen
+                    //Navigator.of(context).pop(); // Return to the previous screen
+                    int count = 0;
+                    Navigator.of(context).popUntil((_) => count++ >= 2);
                   }
                 },
                 style: ElevatedButton.styleFrom(
