@@ -1,3 +1,17 @@
+## Installation
+
+To install and run the system locally, follow these steps:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/RaviniKuruppu/Portfolio_project.git
+2. **Install dependencies:**
+   ```bash
+   cd backend
+   npm install
+3. **Start the application:**
+   ```bash
+   npm start
 ### Database Setup
 
 #### Create a MySQL Database Schema
