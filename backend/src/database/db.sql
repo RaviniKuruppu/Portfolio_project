@@ -49,7 +49,7 @@ CREATE TABLE registrations (
   email VARCHAR(255) NOT NULL,
   phone VARCHAR(20) NOT NULL,
   FOREIGN KEY (event_id) REFERENCES events(id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (user_id) REFERENCES user(id),
   UNIQUE KEY unique_user_event (user_id, event_id)
 );
 
