@@ -16,7 +16,7 @@ To install and run the system locally, follow these steps:
 
 #### Create a MySQL Database Schema
 1. Open your MySQL client (e.g., MySQL Workbench or terminal).
-2. Create a new schema named `project`:
+2. Create a new schema named `eventhub`:
    ```sql
    CREATE DATABASE eventhub;
    USE project;
