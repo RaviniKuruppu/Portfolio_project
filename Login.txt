@@ -1,0 +1,11 @@
+for admin
+{
+  "username": "johndoe",
+  "password": "securepassword"
+}
+
+for User
+{
+  "username": "test1",
+  "password": "test123456"
+}
