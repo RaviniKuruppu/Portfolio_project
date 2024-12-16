@@ -19,7 +19,7 @@ To install and run the system locally, follow these steps:
 2. Create a new schema named `eventhub`:
    ```sql
    CREATE DATABASE eventhub;
-   USE project;
+   USE eventhub;
 3. Execute the `db.sql`  file to set up tables and initial data.
    ```sql
    SOURCE /backend/src/database/db.sql;
