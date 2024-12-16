@@ -1,7 +1,7 @@
 const db = require('../database/db');
 const Registration = require('../models/registrationModel');
 
-// Add Registration
+// Add event Registration
 exports.addRegistration = (req, res) => {
   const { eventId, userId, name, email, phone } = req.body;
 
@@ -28,7 +28,7 @@ exports.addRegistration = (req, res) => {
   });
 };
 
-// Update Registration
+// Update event Registration
 exports.updateRegistration = (req, res) => {
   const { id } = req.params;
   const { eventId, userId, name, email, phone } = req.body;
@@ -45,7 +45,7 @@ exports.updateRegistration = (req, res) => {
   });
 };
 
-// Delete Registration
+// Delete event Registration
 exports.deleteRegistration = (req, res) => {
   const { id } = req.params;
 

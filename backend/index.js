@@ -14,10 +14,10 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-app.use('/api/auth', authRoutes);
-app.use('/api', categoryRoutes);
+app.use('/api/auth', authRoutes); // this route is for login and signup
+app.use('/api', categoryRoutes); // this route is for event categories
 app.use('/api', eventRoutes);
-app.use('/api', registrationRoutes);
+app.use('/api', registrationRoutes); // this route is for event resigration- users regitering to events
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
